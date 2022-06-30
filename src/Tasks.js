@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import {
   addTask,
   getTasks,
@@ -8,6 +8,7 @@ import {
 
 class Tasks extends Component {
   state = { tasks: [], currentTask: "" };
+
   async componentDidMount() {
     try {
       const { data } = await getTasks();
@@ -16,9 +17,11 @@ class Tasks extends Component {
       console.log(error);
     }
   }
+
   handleChange = ({ currentTarget: input }) => {
     this.setState({ currentTask: input.value });
   };
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const originalTasks = this.state.tasks;
@@ -31,20 +34,24 @@ class Tasks extends Component {
       console.log(error);
     }
   };
+
   handleUpdate = async (currentTask) => {
     const originalTasks = this.state.tasks;
     try {
       const tasks = [...originalTasks];
-      const index = tasks.findIndex((task) => task.id === currentTask);
+      const index = tasks.findIndex((task) => task._id === currentTask);
       tasks[index] = { ...tasks[index] };
       tasks[index].completed = !tasks[index].completed;
       this.setState({ tasks });
-      await updateTask(currentTask, { completed: tasks[index].completed });
+      await updateTask(currentTask, {
+        completed: tasks[index].completed,
+      });
     } catch (error) {
       this.setState({ tasks: originalTasks });
       console.log(error);
     }
   };
+
   handleDelete = async (currentTask) => {
     const originalTasks = this.state.tasks;
     try {
